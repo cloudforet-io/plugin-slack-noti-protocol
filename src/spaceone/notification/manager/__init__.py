@@ -1,0 +1,1 @@
+from spaceone.notification.manager.notification_manager import NotificationManager
