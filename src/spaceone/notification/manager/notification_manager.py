@@ -1,16 +1,13 @@
 from spaceone.core.manager import BaseManager
-from spaceone.notification.connector.slack import SlackConnector
+from spaceone.notification.manager.slack_manager import SlackManager
 
 
 class NotificationManager(BaseManager):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.conn = None
 
-    def set_connector(self, token):
-        self.conn: SlackConnector = self.locator.get_connector('SlackConnector', token=token)
-
-    def dispatch(self, slack_channel, message):
-        self.conn.chat_message(slack_channel, message)
-
+    def dispatch(self, token, slack_channel, message):
+        slack_mgr: SlackManager = self.locator.get_manager('SlackManager')
+        slack_mgr.set_connector(token)
+        slack_mgr.send_message(slack_channel, message)

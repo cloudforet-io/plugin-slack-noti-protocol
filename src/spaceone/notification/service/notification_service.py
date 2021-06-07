@@ -31,5 +31,4 @@ class NotificationService(BaseService):
         channel = secret_data.get('channel')
 
         noti_mgr: NotificationManager = self.locator.get_manager('NotificationManager')
-        noti_mgr.set_connector(slack_token)
-        noti_mgr.dispatch(channel, f'[{notification_type}] {message["message"]}')
+        noti_mgr.dispatch(slack_token, channel, f'[{notification_type}] {message["message"]}')
