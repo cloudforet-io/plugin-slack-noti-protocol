@@ -7,8 +7,12 @@ ENV PKG_DIR /tmp/pkg
 ENV SRC_DIR /tmp/src
 
 COPY pkg/*.txt ${PKG_DIR}/
+
 RUN pip install --upgrade pip && \
-    pip install --upgrade --use-deprecated=legacy-resolver -r ${PKG_DIR}/pip_requirements.txt
+    pip install --upgrade -r ${PKG_DIR}/pip_requirements.txt
+
+ARG CACHEBUST=1
+RUN pip install --upgrade --pre spaceone-core spaceone-api
 
 COPY src ${SRC_DIR}
 
