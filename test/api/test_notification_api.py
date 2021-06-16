@@ -46,7 +46,20 @@ class TestSlackNotification(TestCase):
 
         self.notification.Notification.dispatch({
             'options': options,
-            'message': {'message': 'SAL LYO JU SE YO'},
+            'message': {
+                'title': 'This is sample notification',
+                'description': 'SAL LYO JU SE YO.\nDom Whang Cha\n',
+                'tags': {
+                    'project_id': 'project-xxxxx',
+                    'project_name': '스페이스원 웹서버',
+                    'resource_id': 'server-yyyyy',
+                    'resource_name': 'web-server-001'
+                },
+                'callbacks': [{
+                    'label': 'Acknowledge SpaceONE Alerts',
+                    'url': 'https://google.com'
+                }]
+            },
             'notification_type': 'INFO',
             'secret_data': self.secret_data
         })
