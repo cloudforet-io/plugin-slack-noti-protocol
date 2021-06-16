@@ -7,7 +7,7 @@ class NotificationManager(BaseManager):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def dispatch(self, token, slack_channel, message):
+    def dispatch(self, token, slack_channel, message, **kwargs):
         slack_mgr: SlackManager = self.locator.get_manager('SlackManager')
         slack_mgr.set_connector(token)
-        slack_mgr.send_message(slack_channel, message)
+        slack_mgr.send_message(slack_channel, message, **kwargs)
