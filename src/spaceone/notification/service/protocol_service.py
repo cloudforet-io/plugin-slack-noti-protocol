@@ -14,7 +14,22 @@ class ProtocolService(BaseService):
     def init(self, params):
         """ init plugin by options
         """
-        return {'metadata': {}}
+        return {'metadata': {
+            'data_type': 'SECRET',
+            'data': {
+                'properties': {
+                    'token': {
+                        'minLength': 4,
+                        'title': 'Slack Token',
+                        'type': 'string'
+                    }
+                },
+                'required': [
+                    'token'
+                ],
+                'type': 'object'
+            }
+        }}
 
     @transaction
     @check_required(['options'])
