@@ -22,14 +22,16 @@ class NotificationService(BaseService):
                 - message
                 - notification_type
                 - secret_data
+                - channel_data
         """
         secret_data = params.get('secret_data', {})
+        channel_data = params.get('channel_data', {})
         notification_type = params['notification_type']
         message = params['message']
         kwargs = {}
 
         slack_token = secret_data.get('token')
-        channel = secret_data.get('channel')
+        channel = channel_data.get('channel')
 
         noti_mgr: NotificationManager = self.locator.get_manager('NotificationManager')
         message_block = self.make_slack_message_block(message)
