@@ -15,17 +15,17 @@ class ProtocolService(BaseService):
         """ init plugin by options
         """
         return {'metadata': {
-            'data_type': 'SECRET',
+            'data_type': 'PLAIN_TEXT',
             'data': {
                 'properties': {
-                    'token': {
+                    'channel': {
                         'minLength': 4,
-                        'title': 'Slack Token',
+                        'title': 'Slack Channel',
                         'type': 'string'
                     }
                 },
                 'required': [
-                    'token'
+                    'channel'
                 ],
                 'type': 'object'
             }
