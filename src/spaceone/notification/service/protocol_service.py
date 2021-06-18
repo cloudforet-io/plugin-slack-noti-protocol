@@ -17,17 +17,19 @@ class ProtocolService(BaseService):
         return {'metadata': {
             'data_type': 'PLAIN_TEXT',
             'data': {
-                'properties': {
-                    'channel': {
-                        'minLength': 4,
-                        'title': 'Slack Channel',
-                        'type': 'string'
-                    }
-                },
-                'required': [
-                    'channel'
-                ],
-                'type': 'object'
+                'schema': {
+                    'properties': {
+                        'channel': {
+                            'minLength': 4,
+                            'title': 'Slack Channel',
+                            'type': 'string'
+                        }
+                    },
+                    'required': [
+                        'channel'
+                    ],
+                    'type': 'object'
+                }
             }
         }}
 
