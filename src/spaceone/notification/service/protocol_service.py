@@ -19,6 +19,11 @@ class ProtocolService(BaseService):
             'data': {
                 'schema': {
                     'properties': {
+                        'token': {
+                            'minLength': 4,
+                            'title': 'Slack Token',
+                            'type': 'string'
+                        },
                         'channel': {
                             'minLength': 4,
                             'title': 'Slack Channel',
@@ -26,6 +31,7 @@ class ProtocolService(BaseService):
                         }
                     },
                     'required': [
+                        'token',
                         'channel'
                     ],
                     'type': 'object'
