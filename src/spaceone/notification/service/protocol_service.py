@@ -15,7 +15,7 @@ class ProtocolService(BaseService):
         """ init plugin by options
         """
         return {'metadata': {
-            'data_type': 'PLAIN_TEXT',
+            'data_type': 'SECRET',
             'data': {
                 'schema': {
                     'properties': {
