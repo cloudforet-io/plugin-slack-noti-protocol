@@ -28,10 +28,9 @@ class TestSlackNotification(TestCase):
     config = utils.load_yaml_from_file(
         os.environ.get('SPACEONE_TEST_CONFIG_FILE', './config.yml'))
     endpoints = config.get('ENDPOINTS', {})
-    secret_data = {
-        'token': TOKEN
-    }
+    secret_data = {}
     channel_data = {
+        'token': TOKEN,
         'channel': 'everyone'
     }
 
