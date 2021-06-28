@@ -6,6 +6,6 @@ SLACK_CONF = {
         'WARNING': '#FFCE02',
         'DEFAULT': '#858895'
     },
-    'footer': 'From. SpaceONE',
+    'footer': 'SpaceONE',
     'footer_icon_url': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/wanny.png'
 }
