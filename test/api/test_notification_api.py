@@ -1,5 +1,6 @@
 import os
 import logging
+import time
 
 from spaceone.core import utils, config
 from spaceone.tester import TestCase, print_json, to_json
@@ -49,19 +50,32 @@ class TestSlackNotification(TestCase):
             'options': options,
             'message': {
                 'title': 'This is sample notification',
-                'description': 'SAL LYO JU SE YO.\nDom Whang Cha\n',
-                'tags': {
-                    'project_id': 'project-xxxxx',
-                    'project_name': '스페이스원 웹서버',
-                    'resource_id': 'server-yyyyy',
-                    'resource_name': 'web-server-001'
-                },
+                'title_link': 'https://spaceone.console.doodle.spaceone.dev/monitoring/alert-manager/escalation-policy',
+                'description': 'SAL LYO JU SE YO.\n돔 - 황 - ㅊ ㅑ \n',
+                'tags': [
+                    {
+                        'key': 'project_id',
+                        'value': 'project-xxxxx',
+                        'options': {'short': True}
+                    },
+                    {
+                        'key': 'project_name',
+                        'value': '스페이스원 웹서버',
+                        'options': {'short': True}
+                    },
+                    {
+                        'key': 'resource_id',
+                        'value': 'Resource [Asia Pacific (Seoul)]:[AWS/NetworkELB]: net/af83f347171a044af96459ebb37c8225/743a23562a96c595'
+                    },
+
+                ],
                 'callbacks': [{
                     'label': 'Acknowledge SpaceONE Alerts',
-                    'url': 'https://google.com'
-                }]
+                    'url': 'https://monitoring-webhook.dev.spaceone.dev/monitoring/v1/alert/alert-61afa17a25bf/4186dacf2d69a689ca4dbed965ef6e2d/ACKNOWLEDGED'
+                }],
+                'timestamp': str(time.time())
             },
-            'notification_type': 'INFO',
+            'notification_type': 'WARNING',
             'secret_data': self.secret_data,
             'channel_data': self.channel_data
         })
