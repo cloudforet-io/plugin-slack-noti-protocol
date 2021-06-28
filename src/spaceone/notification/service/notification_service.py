@@ -34,7 +34,6 @@ class NotificationService(BaseService):
         channel = channel_data.get('channel')
 
         noti_mgr: NotificationManager = self.locator.get_manager('NotificationManager')
-        # message_block = self.make_slack_message_block(message, notification_type)
         message_block = []
         message_attachment = self.make_slack_message_attachment(message, notification_type)
 
@@ -45,70 +44,47 @@ class NotificationService(BaseService):
 
         noti_mgr.dispatch(slack_token, channel, message_block, **kwargs)
 
-    def make_slack_message_block(self, message, notification_type):
-        '''
-        message (dict): {
-            'title': 'str',
-            'description': bool,
-            'tags': dict,
-            'callbacks': [
-              {
-                'label': 'str',
-                'url': 'str',
-                'options': 'dict'
-              }
-            ]
-        }
-        '''
-
-        blocks = [
-            {
-                "type": "header",
-                "text": {
-                    "type": "plain_text",
-                    "text": f"[{notification_type}] {message.get('title', '')}"
-                }
-            }
-        ]
-
-        contexts = self.make_contexts_from_tags(message.get('tags', {}))
-        if contexts:
-            blocks.extend(contexts)
-
-        buttons = self.make_callback_buttons(message.get('callbacks', []))
-        if buttons:
-            blocks.append({
-                "type": "actions",
-                "elements": buttons
-            })
-
-        return blocks
-
     def make_slack_message_attachment(self, message, notification_type):
         '''
         message (dict): {
             'title': 'str',
+            'title_link': 'str',
             'description': bool,
-            'tags': dict,
+            'tags': [
+                {
+                    'key': '',
+                    'value': '',
+                    'options': {
+                        'short': true|false
+                    }
+                }
+            ],
             'callbacks': [
               {
                 'label': 'str',
                 'url': 'str',
                 'options': 'dict'
               }
-            ]
+            ],
+            'timestamp': 'str'
         }
         '''
         attachments = []
 
         attachment = {
-            "pretext": f"[{notification_type}] {message.get('title', '')}",
+            "pretext": message.get('title', ''),
             "color": self.get_message_attachment_color(notification_type),
             "text": f"{message.get('description', '')}",
             'mrkdwn_in': ['text'],
-            'footer': 'From. SpaceONE',
-            'footer_icon': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/wanny.png'
+            'footer': SLACK_CONF['footer'],
+            'footer_icon': SLACK_CONF['footer_icon_url']
         }
+
+        if 'title_link' in message:
+            attachment.update({
+                'title': message.get('title', ''),
+                'title_link': message.get('title_link'),
+            })
 
         if 'tags' in message:
             attachment['fields'] = self.make_fields_from_tags(message['tags'])
@@ -116,8 +92,10 @@ class NotificationService(BaseService):
         if 'callbacks' in message:
             attachment['actions'] = self.make_callback_buttons_in_attachment(message['callbacks'])
 
-        attachments.append(attachment)
+        if 'timestamp' in message:
+            attachment.update({'ts': message['timestamp']})
 
+        attachments.append(attachment)
         return attachments
 
     @staticmethod
@@ -141,53 +119,19 @@ class NotificationService(BaseService):
         return color_map.get(notification_type, color_map.get('default', '#858895'))
 
     @staticmethod
-    def make_callback_buttons(callbacks):
-        buttons = []
-
-        for callback in callbacks:
-            button_element = {
-                "type": "button",
-                "text": {
-                    "type": "plain_text",
-                    "text": f"{callback.get('label', 'OK')}"
-                },
-                "url": f"{callback.get('url', '')}",
-                "style": "danger"
-            }
-
-            if 'options' in callback:
-                button_element.update(callback['options'])
-
-            buttons.append(button_element)
-
-        return buttons
-
-    @staticmethod
-    def make_contexts_from_tags(tags):
-        contexts = []
-
-        for key, value in tags.items():
-            contexts.append({
-                "type": "context",
-                "elements": [
-                    {
-                        "type": "plain_text",
-                        "text": f"- {key}: {value}",
-                    }
-                ]
-            })
-
-        return contexts
-
-    @staticmethod
     def make_fields_from_tags(tags):
         fields = []
 
-        for key, value in tags.items():
-            fields.append({
-                'title': f'{key}',
-                'value': f'{value}',
-                'short': True
-            })
+        for tag_info in tags:
+            field = {
+                'title': tag_info.get("key", ""),
+                'value': tag_info.get("value", ""),
+            }
+
+            if options := tag_info.get('options'):
+                if 'short' in options:
+                    field.update({'short': options['short']})
+
+            fields.append(field)
 
         return fields
