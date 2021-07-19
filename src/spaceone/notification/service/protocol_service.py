@@ -20,14 +20,18 @@ class ProtocolService(BaseService):
                 'schema': {
                     'properties': {
                         'token': {
+                            'description': 'App-Level token value to control your Slack app',
                             'minLength': 4,
                             'title': 'Slack Token',
-                            'type': 'string'
+                            'type': 'string',
+                            'examples': ['xoxb-123456789012-0987654321098-ABCDEFG']
                         },
                         'channel': {
+                            'description': 'Slack channel to be received messages in your workspace',
                             'minLength': 4,
                             'title': 'Slack Channel',
-                            'type': 'string'
+                            'type': 'string',
+                            'examples': ['everyone']
                         }
                     },
                     'required': [
