@@ -1,5 +1,7 @@
+import time
 import logging
 
+from spaceone.core import utils
 from spaceone.core.service import *
 from spaceone.notification.conf.slack_conf import SLACK_CONF
 from spaceone.notification.manager.notification_manager import NotificationManager
@@ -48,7 +50,7 @@ class NotificationService(BaseService):
         '''
         message (dict): {
             'title': 'str',
-            'title_link': 'str',
+            'link': 'str',
             'description': bool,
             'tags': [
                 {
@@ -66,7 +68,7 @@ class NotificationService(BaseService):
                 'options': 'dict'
               }
             ],
-            'timestamp': 'str'
+            'occurred_at': 'iso8601'
         }
         '''
         attachments = []
@@ -80,10 +82,10 @@ class NotificationService(BaseService):
             'footer_icon': SLACK_CONF['footer_icon_url']
         }
 
-        if 'title_link' in message:
+        if 'link' in message:
             attachment.update({
                 'title': message.get('title', ''),
-                'title_link': message.get('title_link'),
+                'title_link': message.get('link'),
             })
 
         if 'tags' in message:
@@ -92,8 +94,9 @@ class NotificationService(BaseService):
         if 'callbacks' in message:
             attachment['actions'] = self.make_callback_buttons_in_attachment(message['callbacks'])
 
-        if 'timestamp' in message:
-            attachment.update({'ts': message['timestamp']})
+        if 'occured_at' in message:
+            if timestamp := self.convert_occured_at_format(message['occured_at']):
+                attachment.update({'ts': timestamp})
 
         attachments.append(attachment)
         return attachments
@@ -135,3 +138,9 @@ class NotificationService(BaseService):
             fields.append(field)
 
         return fields
+
+    @staticmethod
+    def convert_occured_at_format(occured_at):
+        if dt := utils.iso8601_to_datetime(occured_at):
+            return time.mktime(dt.timetuple())
+        return None
