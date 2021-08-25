@@ -1,6 +1,7 @@
 import os
 import logging
 import time
+import datetime
 
 from spaceone.core import utils, config
 from spaceone.tester import TestCase, print_json, to_json
@@ -32,7 +33,7 @@ class TestSlackNotification(TestCase):
     secret_data = {}
     channel_data = {
         'token': TOKEN,
-        'channel': 'everyone'
+        'channel': 'slack-test'
     }
 
     def test_init(self):
@@ -50,8 +51,8 @@ class TestSlackNotification(TestCase):
             'options': options,
             'message': {
                 'title': 'This is sample notification',
-                'title_link': 'https://spaceone.console.doodle.spaceone.dev/monitoring/alert-manager/escalation-policy',
-                'description': 'SAL LYO JU SE YO.\n돔 - 황 - ㅊ ㅑ \n',
+                'link': 'https://spaceone.console.doodle.spaceone.dev/monitoring/alert-manager/escalation-policy',
+                'description': 'Thresholds Crossed: 1 out of the last 1 datapoints [0.524033991396324 (29/06/21 05:06:00)] was less than the lower thresholds [0.6043306920412774] or greater than the upper thresholds [0.6544568893755576] (minimum 1 datapoint for OK -> ALARM transition).',
                 'tags': [
                     {
                         'key': 'project_id',
@@ -73,7 +74,7 @@ class TestSlackNotification(TestCase):
                     'label': 'Acknowledge SpaceONE Alerts',
                     'url': 'https://monitoring-webhook.dev.spaceone.dev/monitoring/v1/alert/alert-61afa17a25bf/4186dacf2d69a689ca4dbed965ef6e2d/ACKNOWLEDGED'
                 }],
-                'timestamp': str(time.time())
+                'occured_at': datetime.datetime.utcnow().isoformat()
             },
             'notification_type': 'WARNING',
             'secret_data': self.secret_data,
