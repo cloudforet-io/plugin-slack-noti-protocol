@@ -1,6 +1,6 @@
 SLACK_CONF = {
     'attachment_color_map': {
-        'INFO': '#A7A9B2',
+        'INFO': '#43BEFF',
         'ERROR': '#FF6A6A',
         'SUCCESS': '#60B731',
         'WARNING': '#FFCE02',
