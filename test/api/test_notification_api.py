@@ -52,6 +52,7 @@ class TestSlackNotification(TestCase):
             'message': {
                 'title': 'This is sample notification',
                 'link': 'https://spaceone.console.doodle.spaceone.dev/monitoring/alert-manager/escalation-policy',
+                'image_url': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/jal.png',
                 'description': 'Thresholds Crossed: 1 out of the last 1 datapoints [0.524033991396324 (29/06/21 05:06:00)] was less than the lower thresholds [0.6043306920412774] or greater than the upper thresholds [0.6544568893755576] (minimum 1 datapoint for OK -> ALARM transition).',
                 'tags': [
                     {

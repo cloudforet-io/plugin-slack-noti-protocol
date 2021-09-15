@@ -46,11 +46,16 @@ class NotificationService(BaseService):
 
         noti_mgr.dispatch(slack_token, channel, message_block, **kwargs)
 
+        if 'image_url' in message:
+            message_block.append(self._make_image_url_message_block(message))
+            noti_mgr.dispatch(slack_token, channel, message_block)
+
     def make_slack_message_attachment(self, message, notification_type):
         '''
         message (dict): {
             'title': 'str',
             'link': 'str',
+            'image_url': 'str,
             'description': bool,
             'tags': [
                 {
@@ -144,3 +149,16 @@ class NotificationService(BaseService):
         if dt := utils.iso8601_to_datetime(occured_at):
             return time.mktime(dt.timetuple())
         return None
+
+    @staticmethod
+    def _make_image_url_message_block(message):
+        return {
+            'title': {
+                'type': 'plain_text',
+                'text': message.get('title', 'Notification Alert')
+            },
+            'type': 'image',
+            'block_id': 'image4',
+            'image_url': message['image_url'],
+            'alt_text': 'Notification Alert'
+        }
