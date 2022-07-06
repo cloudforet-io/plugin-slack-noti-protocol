@@ -2,13 +2,7 @@
 
 ---
 
-![slack-channel-addition(h2)-1](./GUIDE-img/slack-channel-addition(h2)-1.png)
-
-<img src="https://github.com/spaceone-dev/plugin-slack-noti-protocol/blob/master/docs/ko/GUIDE-img/slack-channel-addition(h2)-1.png" width="50%" height="50%">
-
-<img src="./GUIDE-img/slack-channel-addition(h2)-1.png" width="50%" height="50%">
-
-<img src="/docs/ko/GUIDE-img/slack-channel-addition(h2)-1.png" width="50%" height="50%">
+<img src="./GUIDE-img/slack-channel-addition(h2)-1.png" width="62.5%" height="62.5%">
 
 클라우드포레에서 Slack 플러그인을 사용하기 위해서 [**Slack Channel**], [**Slack Token**]에 대한 설정이 필요합니다.  
 본 설정 가이드는 두 가지 설정 정보를 획득하는 방법을 자세히 알아보도록 하겠습니다.
