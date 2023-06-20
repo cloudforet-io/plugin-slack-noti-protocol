@@ -1,3 +1,4 @@
+import os
 import logging
 from ssl import SSLContext
 from slack_sdk import WebClient
@@ -9,6 +10,9 @@ __all__ = ['SlackConnector']
 _LOGGER = logging.getLogger(__name__)
 
 sslcert = SSLContext()
+if cert_file_path := os.environ.get('CLOUDFORET_CERT_PATH'):
+    sslcert.load_cert_chain(certfile=cert_file_path)
+
 
 class SlackConnector(BaseConnector):
 
