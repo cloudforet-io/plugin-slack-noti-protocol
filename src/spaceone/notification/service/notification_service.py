@@ -16,7 +16,7 @@ class NotificationService(BaseService):
         super().__init__(metadata)
 
     @transaction
-    @check_required(['options', 'message', 'notification_type'])
+    @check_required(["options", "message", "notification_type"])
     def dispatch(self, params):
         """
         Args:
@@ -27,31 +27,32 @@ class NotificationService(BaseService):
                 - secret_data
                 - channel_data
         """
-        channel_data = params.get('channel_data', {})
-        notification_type = params['notification_type']
-        message = params['message']
+        channel_data = params.get("channel_data", {})
+        notification_type = params["notification_type"]
+        message = params["message"]
         kwargs = {}
 
-        slack_token = channel_data.get('token')
-        channel = channel_data.get('channel')
+        slack_token = channel_data.get("token")
+        channel = channel_data.get("channel")
+        channel_id = channel_data.get("channel_id")
 
-        noti_mgr: NotificationManager = self.locator.get_manager('NotificationManager')
+        noti_mgr: NotificationManager = self.locator.get_manager("NotificationManager")
         message_block = []
-        message_attachment = self.make_slack_message_attachment(message, notification_type)
+        message_attachment = self.make_slack_message_attachment(
+            message, notification_type
+        )
 
         if message_attachment:
-            kwargs = {
-                'attachments': message_attachment
-            }
+            kwargs = {"attachments": message_attachment}
 
-        noti_mgr.dispatch(slack_token, channel, message_block, **kwargs)
+        noti_mgr.dispatch(slack_token, channel, channel_id, message_block, **kwargs)
 
-        if 'image_url' in message:
+        if "image_url" in message:
             message_block.append(self._make_image_url_message_block(message))
             noti_mgr.dispatch(slack_token, channel, message_block)
 
     def make_slack_message_attachment(self, message, notification_type):
-        '''
+        """
         message (dict): {
             'title': 'str',
             'link': 'str',
@@ -75,33 +76,37 @@ class NotificationService(BaseService):
             ],
             'occurred_at': 'iso8601'
         }
-        '''
+        """
         attachments = []
 
         attachment = {
-            "pretext": message.get('title', ''),
+            "pretext": message.get("title", ""),
             "color": self.get_message_attachment_color(notification_type),
             "text": f"{message.get('description', '')}",
-            'mrkdwn_in': ['text'],
-            'footer': SLACK_CONF['footer'],
-            'footer_icon': SLACK_CONF['footer_icon_url']
+            "mrkdwn_in": ["text"],
+            "footer": SLACK_CONF["footer"],
+            "footer_icon": SLACK_CONF["footer_icon_url"],
         }
 
-        if 'link' in message:
-            attachment.update({
-                'title': message.get('title', ''),
-                'title_link': message.get('link'),
-            })
+        if "link" in message:
+            attachment.update(
+                {
+                    "title": message.get("title", ""),
+                    "title_link": message.get("link"),
+                }
+            )
 
-        if 'tags' in message:
-            attachment['fields'] = self.make_fields_from_tags(message['tags'])
+        if "tags" in message:
+            attachment["fields"] = self.make_fields_from_tags(message["tags"])
 
-        if 'callbacks' in message:
-            attachment['actions'] = self.make_callback_buttons_in_attachment(message['callbacks'])
+        if "callbacks" in message:
+            attachment["actions"] = self.make_callback_buttons_in_attachment(
+                message["callbacks"]
+            )
 
-        if 'occured_at' in message:
-            if timestamp := self.convert_occured_at_format(message['occured_at']):
-                attachment.update({'ts': timestamp})
+        if "occured_at" in message:
+            if timestamp := self.convert_occured_at_format(message["occured_at"]):
+                attachment.update({"ts": timestamp})
 
         attachments.append(attachment)
         return attachments
@@ -111,20 +116,22 @@ class NotificationService(BaseService):
         actions = []
 
         for _callback in callbacks:
-            actions.append({
-                'name': _callback.get('label', ''),
-                'text': _callback.get('label', ''),
-                'type': 'button',
-                'style': 'danger',
-                "url": f"{_callback.get('url', '')}",
-            })
+            actions.append(
+                {
+                    "name": _callback.get("label", ""),
+                    "text": _callback.get("label", ""),
+                    "type": "button",
+                    "style": "danger",
+                    "url": f"{_callback.get('url', '')}",
+                }
+            )
 
         return actions
 
     @staticmethod
     def get_message_attachment_color(notification_type):
-        color_map = SLACK_CONF.get('attachment_color_map', {})
-        return color_map.get(notification_type, color_map.get('default', '#858895'))
+        color_map = SLACK_CONF.get("attachment_color_map", {})
+        return color_map.get(notification_type, color_map.get("default", "#858895"))
 
     @staticmethod
     def make_fields_from_tags(tags):
@@ -132,13 +139,13 @@ class NotificationService(BaseService):
 
         for tag_info in tags:
             field = {
-                'title': tag_info.get("key", ""),
-                'value': tag_info.get("value", ""),
+                "title": tag_info.get("key", ""),
+                "value": tag_info.get("value", ""),
             }
 
-            if options := tag_info.get('options'):
-                if 'short' in options:
-                    field.update({'short': options['short']})
+            if options := tag_info.get("options"):
+                if "short" in options:
+                    field.update({"short": options["short"]})
 
             fields.append(field)
 
@@ -153,12 +160,12 @@ class NotificationService(BaseService):
     @staticmethod
     def _make_image_url_message_block(message):
         return {
-            'title': {
-                'type': 'plain_text',
-                'text': message.get('title', 'Notification Alert')
+            "title": {
+                "type": "plain_text",
+                "text": message.get("title", "Notification Alert"),
             },
-            'type': 'image',
-            'block_id': 'image4',
-            'image_url': message['image_url'],
-            'alt_text': 'Notification Alert'
+            "type": "image",
+            "block_id": "image4",
+            "image_url": message["image_url"],
+            "alt_text": "Notification Alert",
         }

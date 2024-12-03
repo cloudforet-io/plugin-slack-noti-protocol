@@ -9,7 +9,9 @@ class SlackManager(BaseManager):
         self.conn = None
 
     def set_connector(self, token):
-        self.conn: SlackConnector = self.locator.get_connector('SlackConnector', token=token)
+        self.conn: SlackConnector = self.locator.get_connector(
+            "SlackConnector", token=token
+        )
 
-    def send_message(self, slack_channel, message, **kwargs):
-        self.conn.chat_message(slack_channel, message, **kwargs)
+    def send_message(self, slack_channel, slack_channel_id, message, **kwargs):
+        self.conn.chat_message(slack_channel, slack_channel_id, message, **kwargs)

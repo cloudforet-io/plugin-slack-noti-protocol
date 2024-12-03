@@ -16,23 +16,24 @@
 
 from setuptools import setup, find_packages
 
-with open('VERSION', 'r') as f:
+with open("VERSION", "r") as f:
     VERSION = f.read().strip()
     f.close()
 
 setup(
-    name='plugin-notification-slack-protocol',
+    name="plugin-notification-slack-protocol",
     version=VERSION,
-    description='Slack notification protocol',
-    long_description='',
-    url='https://www.spaceone.dev/',
-    author='MEGAZONE SpaceONE Team',
-    author_email='admin@spaceone.dev',
-    license='Apache License 2.0',
+    description="Slack notification protocol",
+    long_description="",
+    url="https://www.spaceone.dev/",
+    author="MEGAZONE SpaceONE Team",
+    author_email="admin@spaceone.dev",
+    license="Apache License 2.0",
     packages=find_packages(),
     install_requires=[
-        'spaceone-api',
-        'slack_sdk'
+        "spaceone-api==2.0.95",
+        "spaceone-tester",
+        "slack_sdk",
     ],
     zip_safe=False,
 )

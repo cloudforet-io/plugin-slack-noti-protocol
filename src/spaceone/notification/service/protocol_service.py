@@ -10,41 +10,46 @@ class ProtocolService(BaseService):
     def __init__(self, metadata):
         super().__init__(metadata)
 
-    @check_required(['options'])
+    @check_required(["options"])
     def init(self, params):
-        """ init plugin by options
-        """
-        return {'metadata': {
-            'data_type': 'SECRET',
-            'data': {
-                'schema': {
-                    'properties': {
-                        'token': {
-                            'description': 'App-Level token value to control your Slack app',
-                            'minLength': 4,
-                            'title': 'Slack Token',
-                            'type': 'string',
-                            'examples': ['xoxb-123456789012-0987654321098-ABCDEFG']
+        """init plugin by options"""
+        return {
+            "metadata": {
+                "data_type": "SECRET",
+                "data": {
+                    "schema": {
+                        "properties": {
+                            "token": {
+                                "description": "App-Level token value to control your Slack app",
+                                "minLength": 4,
+                                "title": "Slack Token",
+                                "type": "string",
+                                "examples": ["xoxb-123456789012-0987654321098-ABCDEFG"],
+                            },
+                            "channel": {
+                                "description": "Slack channel to be received messages in your workspace",
+                                "minLength": 4,
+                                "title": "Slack Channel",
+                                "type": "string",
+                                "examples": ["everyone"],
+                            },
+                            "channel_id": {
+                                "description": "To send a message to a private channel, please provide the channel ID",
+                                "minLength": 4,
+                                "title": "Slack Channel ID",
+                                "type": "string",
+                                "examples": ["C1234567890"],
+                            },
                         },
-                        'channel': {
-                            'description': 'Slack channel to be received messages in your workspace',
-                            'minLength': 4,
-                            'title': 'Slack Channel',
-                            'type': 'string',
-                            'examples': ['everyone']
-                        }
-                    },
-                    'required': [
-                        'token',
-                        'channel'
-                    ],
-                    'type': 'object'
-                }
+                        "required": ["token", "channel"],
+                        "type": "object",
+                    }
+                },
             }
-        }}
+        }
 
     @transaction
-    @check_required(['options'])
+    @check_required(["options"])
     def verify(self, params):
         """
         Args:
@@ -52,7 +57,7 @@ class ProtocolService(BaseService):
                 - options
                 - secret_data
         """
-        options = params['options']
-        secret_data = params.get('secret_data', {})
+        options = params["options"]
+        secret_data = params.get("secret_data", {})
 
         return {}
